@@ -1,0 +1,186 @@
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.sun.xml.bind.v2.model.core.ID;
+
+import javax.swing.plaf.synth.SynthOptionPaneUI;
+import java.io.*;
+import java.nio.charset.StandardCharsets;
+import java.util.*;
+
+/**
+ This class reads files and store info to data structures
+ lastly it will validate the arguments and run the UI class in the main method
+ */
+public class YelpReviewSearch{
+
+    private static Set<String> bizId = new HashSet<>();
+
+    /**  This method reads review and qa file and store the following:
+     - store term as key and <id -> frequency> as value to invertedIndex data structure
+     - store id as key and review/ qa object as key to idMap data structure
+     - store id as key and asin as value to idAsinMap data structure
+     * @param filePaths a list of file paths
+     * @param type file type
+     * @return a list of object that hold info
+     */
+    public static List<Object> readFile(List<String> filePaths, String type) {
+        InvertedIndex invertedIndex = new InvertedIndex(); //<term -> <id -> freq>>
+        IdMap idMap = new IdMap(); //<id -> reviews>
+        List<Object> output = new ArrayList<>();
+        String line;
+        String indicator;
+        int docID = 0;
+        Gson gson = new Gson();
+
+        if (type.equals("reviews")) {
+            indicator = filePaths.get(1);
+        }
+        else{ // business info
+            indicator = filePaths.get(0);
+        }
+        try (BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(indicator)))) { // try with resource
+            while ((line = br.readLine()) != null) {
+                if ((!line.equals(""))) {
+                    try { //skip bad line
+                        if (type.equals("reviews")) {
+                            Reviews rw = gson.fromJson(line, Reviews.class);
+                            rw.setDocID(docID);
+                            UtilityMap.addToInvertedIndex(invertedIndex, rw);
+                            UtilityMap.addToIdMap(idMap, docID, rw);
+                            docID++;
+
+
+                        } else if (type.equals("business")) {
+                            BusinessInfo biz = gson.fromJson(line, BusinessInfo.class);
+                            biz.setDocID(docID);
+                            UtilityMap.addToIdMap(idMap, docID, biz);
+                            docID++;
+                            System.out.println("biz doc id: " + docID);
+
+                        }
+                    } catch (com.google.gson.JsonSyntaxException e) {
+                        System.out.println("skip a bad line...");
+                    }
+                }
+            }
+        } catch (IOException e) {
+            System.out.println("fail to read the file");
+            e.printStackTrace();
+        }
+
+        if (type.equals("reviews")) {
+            output.add(invertedIndex);
+            output.add(idMap);
+        }
+        else{
+            if(idMap.size() != 0) {
+                output.add(idMap);
+            }
+        }
+        return output;
+    }
+
+
+//    /**
+//     * parse the user inputs
+//     * @param args list of argument strings
+//     * @return list of file paths
+//     */
+//    public static List<String> validateFileArgs(String[] args){
+//        String reviewFile = null;
+//        String qnaFile = null;
+//        List<String> paths = new ArrayList<>();
+//        for(int i = 0; i < args.length; i++){
+//            if(args[i].equals("-reviews")){
+//                reviewFile = args[i+1];
+//            }
+//            else if(args[i].equals("-qa")){
+//                qnaFile = args[i+1];
+//            }
+//        }
+//
+//        System.out.println("review file: " + reviewFile);
+//        System.out.println("qna file: " + qnaFile);
+//
+//        if(reviewFile == null || qnaFile == null){
+//            System.out.println("Empty review file path or qna path");
+//            return null;
+//        }
+//        paths.add(reviewFile);
+//        paths.add(qnaFile);
+//        return paths;
+//    }
+
+
+//    /**
+//     * process User interface operations
+//     * @param paths list of file paths
+//     */
+//    public static void run(List<String> paths){
+//        if (paths != null && paths.size() == 2) {
+//            UI ui = new UI(paths);
+//            ui.processFiles();
+//            ui.userInput();
+//        }
+//    }
+
+
+//    public static void main(String[] args) {
+//        List<String> paths = validateFileArgs(args);
+//        run(paths);
+//    }
+
+
+
+
+
+
+
+
+
+    public static void main(String[] args) throws IOException {
+        // process data -> only keep food related review and business
+
+
+        long startTime = System.currentTimeMillis();
+        SentimentAnalysis.init();
+        InvertedIndex invertedIndexRW = new InvertedIndex();
+        IdMap idMapRW = new IdMap();
+        List<String> files = new ArrayList<>();
+
+
+        SentimentAnalysis.loadStopWords();
+
+        files.add("data/yelp_academic_dataset_business_food.json");
+        List<Object> bizList = YelpReviewSearch.readFile(files, "business");
+        // create a list of biz ids after filtering
+
+        IdMap idMapBiz = (IdMap)bizList.get(0);
+        // make id into a list
+
+//        for (Object biz: idMapBiz.getValues()){
+//            bizId.add(((BusinessInfo)biz).getBusiness_id());
+//        }
+
+
+        files.add("data/yelp_academic_dataset_review_food.json");
+        List<Object> rwList = YelpReviewSearch.readFile(files, "reviews");
+
+        for(Object o : rwList){
+            if (o instanceof InvertedIndex){
+                invertedIndexRW = (InvertedIndex) o;
+            }
+            else{
+                idMapRW = (IdMap) o;
+            }
+        }
+
+
+
+        //System.out.println(idMapBiz);
+        long endTime = System.currentTimeMillis();
+        long timeElapsed = endTime - startTime;
+        System.out.println("Execution time in seconds: " + timeElapsed / 1000);
+    }
+
+}
