@@ -32,24 +32,6 @@ public class BusinessInfo {
         this.postal_code = postal_code;
     }
 
-
-    /**
-     * Returns docId of the review
-     * @return docId
-     */
-    public int getDocID() {
-        return docID;
-    }
-
-
-    /**
-     * set docId of the review
-     */
-    public void setDocID(int docID) {
-        this.docID = docID;
-    }
-
-
     /**
      * Returns ASIN of the review
      * @return ASIN

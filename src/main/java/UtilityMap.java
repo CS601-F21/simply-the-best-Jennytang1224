@@ -27,5 +27,10 @@ public class UtilityMap {
     }
 
 
+    public static void addToBusinessIdMap(BusinessIdMap businessIdMap, String bizId, Object obj){
+        businessIdMap.put(bizId, obj);
+    }
+
+
 
 }

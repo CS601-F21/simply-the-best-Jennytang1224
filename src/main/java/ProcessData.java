@@ -1,17 +1,13 @@
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.sun.xml.bind.v2.model.core.ID;
 
-import javax.swing.plaf.synth.SynthOptionPaneUI;
 import java.io.*;
-import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 /**
  This class reads files and store info to data structures
  lastly it will validate the arguments and run the UI class in the main method
  */
-public class YelpReviewSearch{
+public class ProcessData {
 
     private static Set<String> bizId = new HashSet<>();
 
@@ -26,6 +22,7 @@ public class YelpReviewSearch{
     public static List<Object> readFile(List<String> filePaths, String type) {
         InvertedIndex invertedIndex = new InvertedIndex(); //<term -> <id -> freq>>
         IdMap idMap = new IdMap(); //<id -> reviews>
+        BusinessIdMap businessIdMap = new BusinessIdMap(); //<businessId -> businessInfo>
         List<Object> output = new ArrayList<>();
         String line;
         String indicator;
@@ -49,13 +46,12 @@ public class YelpReviewSearch{
                             UtilityMap.addToIdMap(idMap, docID, rw);
                             docID++;
 
-
                         } else if (type.equals("business")) {
                             BusinessInfo biz = gson.fromJson(line, BusinessInfo.class);
-                            biz.setDocID(docID);
-                            UtilityMap.addToIdMap(idMap, docID, biz);
-                            docID++;
-                            System.out.println("biz doc id: " + docID);
+                            String bizId = biz.getBusiness_id();
+                            UtilityMap.addToBusinessIdMap(businessIdMap, bizId, biz);
+                            System.out.println("biz id: " + bizId);
+
 
                         }
                     } catch (com.google.gson.JsonSyntaxException e) {
@@ -134,37 +130,27 @@ public class YelpReviewSearch{
 
 
 
-
-
-
-
     public static void main(String[] args) throws IOException {
         // process data -> only keep food related review and business
 
 
         long startTime = System.currentTimeMillis();
         SentimentAnalysis.init();
+
         InvertedIndex invertedIndexRW = new InvertedIndex();
         IdMap idMapRW = new IdMap();
+        BusinessIdMap businessIdMap = new BusinessIdMap();
         List<String> files = new ArrayList<>();
-
 
         SentimentAnalysis.loadStopWords();
 
         files.add("data/yelp_academic_dataset_business_food.json");
-        List<Object> bizList = YelpReviewSearch.readFile(files, "business");
-        // create a list of biz ids after filtering
-
-        IdMap idMapBiz = (IdMap)bizList.get(0);
-        // make id into a list
-
-//        for (Object biz: idMapBiz.getValues()){
-//            bizId.add(((BusinessInfo)biz).getBusiness_id());
-//        }
+        List<Object> bizList = ProcessData.readFile(files, "business");
+        BusinessIdMap idMapBiz = (BusinessIdMap)bizList.get(0);
 
 
         files.add("data/yelp_academic_dataset_review_food.json");
-        List<Object> rwList = YelpReviewSearch.readFile(files, "reviews");
+        List<Object> rwList = ProcessData.readFile(files, "reviews");
 
         for(Object o : rwList){
             if (o instanceof InvertedIndex){
@@ -175,9 +161,6 @@ public class YelpReviewSearch{
             }
         }
 
-
-
-        //System.out.println(idMapBiz);
         long endTime = System.currentTimeMillis();
         long timeElapsed = endTime - startTime;
         System.out.println("Execution time in seconds: " + timeElapsed / 1000);

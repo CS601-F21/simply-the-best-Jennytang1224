@@ -28,6 +28,10 @@ public class IdMap{
         return idMap.values().toArray();
     }
 
+    public Reviews getValue(int key){
+        return (Reviews) idMap.get(key);
+    }
+
     /**
      * print the review object details
      * @param id
