@@ -36,8 +36,8 @@ public class Search {
         System.out.println("num of reviews related to term: " + reviewIds);
         for(int id: reviewIds) {
             Reviews review = idMapReviews.getValue(id); // review related to the term
-            // only look into the review has >= 4 stars
-            if(review.getStars() < 4){
+            // only look into the review has 5 stars
+            if(review.getStars() < 5){
                 continue;
             }
             //extract the sentence contains the key
@@ -109,19 +109,6 @@ public class Search {
         return sortedMap;
     }
 
-//
-//    /**
-//     * sort all values in InvertedIndex map by the frequency
-//     */
-//    public void sortAll(){
-//        for (Map.Entry<String, ConcurrentHashMap<Integer, Integer>> entry: invertedIndexMap.entrySet()) {
-//            Map<Integer, Integer> sorted = sortHashMap(entry.getValue());
-//            entry.setValue((ConcurrentHashMap<Integer, Integer>) sorted);
-//        }
-//    }
-
-
-
 
     //find first sentence within a review with a given term
     public String findRelatedSentences(String reviewText, String term){
@@ -138,6 +125,7 @@ public class Search {
         }
         return null;
     }
+
 
 
 

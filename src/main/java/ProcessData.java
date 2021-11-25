@@ -41,10 +41,13 @@ public class ProcessData {
                     try { //skip bad line
                         if (type.equals("reviews")) {
                             Reviews rw = gson.fromJson(line, Reviews.class);
-                            rw.setDocID(docID);
-                            UtilityMap.addToInvertedIndex(invertedIndex, rw);
-                            UtilityMap.addToIdMap(idMap, docID, rw);
-                            docID++;
+                            if(rw.getStars() > 4) {
+                                rw.setDocID(docID);
+                                UtilityMap.addToInvertedIndex(invertedIndex, rw);
+                                UtilityMap.addToIdMap(idMap, docID, rw);
+                                docID++;
+                                System.out.println("review id: " + docID);
+                            }
 
                         } else if (type.equals("business")) {
                             BusinessInfo biz = gson.fromJson(line, BusinessInfo.class);
@@ -69,8 +72,8 @@ public class ProcessData {
             output.add(idMap);
         }
         else{
-            if(idMap.size() != 0) {
-                output.add(idMap);
+            if(BusinessIdMap.size() != 0) {
+                output.add(businessIdMap);
             }
         }
         return output;
@@ -126,44 +129,5 @@ public class ProcessData {
 //        run(paths);
 //    }
 
-
-
-
-
-    public static void main(String[] args) throws IOException {
-        // process data -> only keep food related review and business
-
-
-        long startTime = System.currentTimeMillis();
-        SentimentAnalysis.init();
-
-        InvertedIndex invertedIndexRW = new InvertedIndex();
-        IdMap idMapRW = new IdMap();
-        BusinessIdMap businessIdMap = new BusinessIdMap();
-        List<String> files = new ArrayList<>();
-
-        SentimentAnalysis.loadStopWords();
-
-        files.add("data/yelp_academic_dataset_business_food.json");
-        List<Object> bizList = ProcessData.readFile(files, "business");
-        BusinessIdMap idMapBiz = (BusinessIdMap)bizList.get(0);
-
-
-        files.add("data/yelp_academic_dataset_review_food.json");
-        List<Object> rwList = ProcessData.readFile(files, "reviews");
-
-        for(Object o : rwList){
-            if (o instanceof InvertedIndex){
-                invertedIndexRW = (InvertedIndex) o;
-            }
-            else{
-                idMapRW = (IdMap) o;
-            }
-        }
-
-        long endTime = System.currentTimeMillis();
-        long timeElapsed = endTime - startTime;
-        System.out.println("Execution time in seconds: " + timeElapsed / 1000);
-    }
 
 }
