@@ -5,22 +5,21 @@ import java.util.Map;
 import java.util.Set;
 
 public class Run {
-    private static BusinessIdMap idMapBiz;
-    private static IdMap idMapRW;
-    private static InvertedIndex invertedIndexRW;
-    private static BusinessIdMap businessIdMap;
 
     public static void main(String[] args) throws IOException {
+        IdMap idMapRW = new IdMap();
+        InvertedIndex invertedIndexRW = new InvertedIndex();
+        List<String> files = new ArrayList<>();
+
         long startTime = System.currentTimeMillis();
         SentimentAnalysis.init();
         SentimentAnalysis.loadStopWords();
 
-        List<String> files = new ArrayList<>();
 
         files.add("data/yelp_academic_dataset_business_food.json");
         List<Object> bizList = ProcessData.readFile(files, "business");
         System.out.println("finishing reading business info file");
-        idMapBiz = (BusinessIdMap) bizList.get(0);
+        BusinessIdMap idMapBiz = (BusinessIdMap) bizList.get(0);
 
 
         files.add("data/yelp_academic_dataset_review_food.json");
@@ -38,12 +37,11 @@ public class Run {
         }
 
         Search search = new Search();
-
-        String term = "hot";
+        String term = "donuts";
         int k = 3;
-        Set<Integer> reviewIds = search.getReviewIds(term);
-        Map<String, Integer>  businessWithPosCnt = search.MakeBusinessWithPosRWsMap(idMapRW, reviewIds, term);
-        search.displayTopKBusiness(businessWithPosCnt, businessIdMap, k);
+        Set<Integer> reviewIds = search.getReviewIds(term, invertedIndexRW);
+        Map<String, Integer> businessWithPosCnt = search.MakeBusinessWithPosRWsMap(idMapRW, reviewIds, term);
+        search.displayTopKBusiness(businessWithPosCnt, idMapBiz, k);
 
         long endTime = System.currentTimeMillis();
         long timeElapsed = endTime - startTime;

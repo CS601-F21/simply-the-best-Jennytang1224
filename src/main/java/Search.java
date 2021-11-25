@@ -4,8 +4,6 @@ import java.util.regex.Pattern;
 
 public class Search {
     private static final Pattern END_OF_SENTENCE = Pattern.compile("\\.\\s+");
-    private InvertedIndex invertedIndexRW = new InvertedIndex(); //<term -> <id -> freq>>
-    private Set<Integer> positiveReviewIds;
     private Map<String, String> sentenceMap= new ConcurrentHashMap<>(); // sentence -> type
     private Map<String, Integer> businessWithPosCnt = new ConcurrentHashMap<>(); // businessID -> positiveFreq
 
@@ -16,9 +14,7 @@ public class Search {
      * @param term a given term
      */
     //get review ids where review contains the term
-    public Set<Integer> getReviewIds(String term){
-        //invertedIndexRW.sortAll();
-
+    public Set<Integer> getReviewIds(String term, InvertedIndex invertedIndexRW){
         if(invertedIndexRW.get(term) == null){
             System.out.println("No results found");
             System.out.println("0 result found! Please try another term.");
@@ -125,7 +121,6 @@ public class Search {
         }
         return null;
     }
-
 
 
 
