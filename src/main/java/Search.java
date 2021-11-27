@@ -3,7 +3,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Pattern;
 
 public class Search {
-    private static final Pattern END_OF_SENTENCE = Pattern.compile("\\.\\s+");
+    private static final Pattern END_OF_SENTENCE = Pattern.compile(".$");//("\\.\\s+");
     private Map<String, String> sentenceMap= new ConcurrentHashMap<>(); // sentence -> type
     private Map<String, Integer> businessWithPosCnt = new ConcurrentHashMap<>(); // businessID -> positiveFreq
 
@@ -16,8 +16,6 @@ public class Search {
     //get review ids where review contains the term
     public Set<Integer> getReviewIds(String term, InvertedIndex invertedIndexRW){
         if(invertedIndexRW.get(term) == null){
-            System.out.println("No results found");
-            System.out.println("0 result found! Please try another term.");
             return null;
         }
 
@@ -26,10 +24,15 @@ public class Search {
     }
 
 
-    public Map<String, Integer> MakeBusinessWithPosRWsMap(IdMap idMapReviews, Set<Integer> reviewIds, String term){
+    public Map<String, Integer> MakeBusinessWithPosRWsMap(IdMap idMapReviews, InvertedIndex invertedIndexRW, String term){
         int counter = 0;
         String type;
-        System.out.println("num of reviews related to term: " + reviewIds);
+        Set<Integer> reviewIds = getReviewIds(term, invertedIndexRW);
+        if(reviewIds == null){
+            System.out.println("0 result found! Please try another term.");
+            return null;
+        }
+        System.out.println("num of reviews related to term: " + reviewIds.size());
         for(int id: reviewIds) {
             Reviews review = idMapReviews.getValue(id); // review related to the term
             // only look into the review has 5 stars
@@ -37,7 +40,10 @@ public class Search {
                 continue;
             }
             //extract the sentence contains the key
+            counter++;
+            System.out.println("----> count num of 5-star reviews with the term: " + counter);
             String sentence = findRelatedSentences(review.getReviewText(), term);
+//            String sentence = review.getReviewText().toLowerCase();
             if(sentence == null){
                 continue;
             }
@@ -48,11 +54,11 @@ public class Search {
             // if haven't been analyzed
             else{
                 //sentiment analysis on the term, avg the score on sentences within same review -> if positive, counter ++
-                type = SentimentAnalysis.analyze(sentence);
+                type = SentimentAnalysis.analyze(sentence.toLowerCase());
                 sentenceMap.put(sentence, type);
             }
 
-            System.out.println(term + " " + type + ": \n" + sentence);
+            System.out.println(term + " ->  " + type + ": \n" + sentence);
             if(type.equalsIgnoreCase("very positive") || type.equalsIgnoreCase("positive")) {
                 //positiveReviewIds.add(id);
                 String businessId = review.getBusiness_id();
@@ -64,21 +70,27 @@ public class Search {
                 }
             }
         }
+
         return businessWithPosCnt;
     }
 
 
-    public void displayTopKBusiness(Map<String, Integer> businessWithPosCnt, BusinessIdMap businessIdMap, int k){
+    public void displayTopKBusiness(String term, Map<String, Integer> businessWithPosCnt, BusinessIdMap businessIdMap, int k){
         int counter = 0;
+        if (businessWithPosCnt != null) {
+            Map<String, Integer> sorted = sortHashMap(businessWithPosCnt);
+            for (Map.Entry<String, Integer> entry : sorted.entrySet()) {
+                System.out.println(entry.getValue());
+//                if (counter >= k) {
+//                    break;
+//                }
+                String businessId = entry.getKey();
+                BusinessInfo bizInfo = businessIdMap.getValue(businessId);
 
-        for (Map.Entry<String, Integer> entry : businessWithPosCnt.entrySet()) {
-            if(counter > k){
-                break;
+                System.out.println(bizInfo.toString() + "\n" +
+                        " Number of positive reviews about " + term + ": " + entry.getValue());
+                counter++;
             }
-            String businessId = entry.getKey();
-            BusinessInfo bizInfo = businessIdMap.getValue(businessId);
-            bizInfo.toString();
-            counter++;
         }
     }
 
@@ -114,7 +126,8 @@ public class Search {
 //                .orElse(null); // return first match, if no match, return whole thing
 //        return sentence;
         final String lcword = term.toLowerCase();
-        for (String sentence : END_OF_SENTENCE.split(reviewText)) {
+//        for (String sentence : END_OF_SENTENCE.split(reviewText)) {
+        for (String sentence : reviewText.split("[,?.@!;-]+", -2)) {
             if (sentence.toLowerCase().contains(lcword)) {
                 return sentence;
             }
