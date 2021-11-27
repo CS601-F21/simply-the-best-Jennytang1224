@@ -40,11 +40,9 @@ public class BusinessInfo {
     }
 
 
-
     public String getBusinessCategories(){
         return categories;
     }
-
 
 
     /**
@@ -52,11 +50,10 @@ public class BusinessInfo {
      * @return review string
      */
     public String toString(){
-        return "businessID: " + business_id + "\n "
-                + "name: " + name + "\n "
-                + "address: " + address + "\n "
-                + "city: " + city + "\n "
-                + "state: " + state + "\n "
-                + "postal: " + postal_code;
+        return " Name: " + name + "\n "
+                + "Address: " + address + "\n "
+                + "City: " + city + "\n "
+                + "State: " + state + "\n "
+                + "Postal: " + postal_code;
     }
 }

@@ -16,7 +16,6 @@ public class Run {
         SentimentAnalysis.init();
         SentimentAnalysis.loadStopWords();
 
-
         files.add("data/yelp_academic_dataset_business_food.json");
         files.add("data/yelp_academic_dataset_review_food.json");
 
@@ -38,7 +37,7 @@ public class Run {
         }
 
         Search search = new Search();
-        String term = "crepe";
+        String term = "pizza";
         int k = 3;
         Map<String, Integer> businessWithPosCnt = search.MakeBusinessWithPosRWsMap(idMapRW, invertedIndexRW, term);
         search.displayTopKBusiness(term, businessWithPosCnt, idMapBiz, k);

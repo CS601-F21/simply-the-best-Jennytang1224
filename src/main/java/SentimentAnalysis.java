@@ -35,10 +35,6 @@ public class SentimentAnalysis {
     }
 
 
-
-
-
-
     public static String analyze(String review) {
         int mainSentiment = 0;
         String type = "None";
@@ -57,7 +53,8 @@ public class SentimentAnalysis {
 
     public static void main(String[] args) {
         init();
-        System.out.println(analyze("apparently"));
+        System.out.println(analyze("big portions and some of the tastiest mahi mahi fish n chips I've had yet"));
+
     }
 
 }

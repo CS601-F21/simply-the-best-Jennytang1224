@@ -46,16 +46,14 @@ public class ProcessData {
                                 UtilityMap.addToInvertedIndex(invertedIndex, rw);
                                 UtilityMap.addToIdMap(idMap, docID, rw);
                                 docID++;
-                                System.out.println("review id: " + docID);
+                                //System.out.println("review id: " + docID);
                             }
 
                         } else if (type.equals("business")) {
                             BusinessInfo biz = gson.fromJson(line, BusinessInfo.class);
                             String bizId = biz.getBusiness_id();
                             UtilityMap.addToBusinessIdMap(businessIdMap, bizId, biz);
-                            System.out.println("biz id: " + bizId);
-
-
+                            //System.out.println("biz id: " + bizId);
                         }
                     } catch (com.google.gson.JsonSyntaxException e) {
                         System.out.println("skip a bad line...");
@@ -72,9 +70,7 @@ public class ProcessData {
             output.add(idMap);
         }
         else{
-            if(BusinessIdMap.size() != 0) {
                 output.add(businessIdMap);
-            }
         }
         return output;
     }
