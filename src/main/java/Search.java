@@ -26,13 +26,14 @@ public class Search {
 
     public Map<String, Integer> MakeBusinessWithPosRWsMap(IdMap idMapReviews, InvertedIndex invertedIndexRW, String term){
         int counter = 0;
+        int count_long = 0;
         String type;
         Set<Integer> reviewIds = getReviewIds(term, invertedIndexRW);
         if(reviewIds == null){
             System.out.println("0 result found! Please try another term.");
             return null;
         }
-        System.out.println("num of reviews related to term: " + reviewIds.size());
+        System.out.println("Number of reviews related to " + term + " : " + reviewIds.size());
         for(int id: reviewIds) {
             Reviews review = idMapReviews.getValue(id); // review related to the term
             // only look into the review has 5 stars
@@ -41,10 +42,22 @@ public class Search {
             }
             //extract the sentence contains the key
             counter++;
-            System.out.println("----> count num of 5-star reviews with the term: " + counter);
+            //System.out.println("----> count num of 5-star reviews with the term: " + counter);
             String sentence = findRelatedSentences(review.getReviewText(), term);
 //            String sentence = review.getReviewText().toLowerCase();
             if(sentence == null){
+                continue;
+            }
+
+            if(sentence.split(" ").length > 15){
+//                System.out.println(sentence);
+
+                count_long++;
+//                String newSentence = "";
+//                for (int i = 0; i < 10; i++) {
+//                    newSentence = newSentence + " " + sentence.split(" ")[i];
+//                }
+//                sentence = newSentence;
                 continue;
             }
             //check if sentence has been analyzed already
@@ -58,7 +71,8 @@ public class Search {
                 sentenceMap.put(sentence, type);
             }
 
-            System.out.println(term + " ->  " + type + ": \n" + sentence);
+            //System.out.println(term + " ->  " + type + ": \n" + sentence);
+
             if(type.equalsIgnoreCase("very positive") || type.equalsIgnoreCase("positive")) {
                 //positiveReviewIds.add(id);
                 String businessId = review.getBusiness_id();
@@ -70,7 +84,7 @@ public class Search {
                 }
             }
         }
-
+        System.out.println("count_long:" + count_long);
         return businessWithPosCnt;
     }
 
@@ -78,17 +92,18 @@ public class Search {
     public void displayTopKBusiness(String term, Map<String, Integer> businessWithPosCnt, BusinessIdMap businessIdMap, int k){
         int counter = 0;
         if (businessWithPosCnt != null) {
+            System.out.println(" *** Top " + k + " restaurant(s) with best " + term + ": ***");
             Map<String, Integer> sorted = sortHashMap(businessWithPosCnt);
             for (Map.Entry<String, Integer> entry : sorted.entrySet()) {
-                System.out.println(entry.getValue());
-//                if (counter >= k) {
-//                    break;
-//                }
+                //System.out.println(entry.getValue());
+                if (counter >= k) {
+                    break;
+                }
                 String businessId = entry.getKey();
                 BusinessInfo bizInfo = businessIdMap.getValue(businessId);
 
                 System.out.println(bizInfo.toString() + "\n" +
-                        " Number of positive reviews about " + term + ": " + entry.getValue());
+                        " Number of positive reviews on " + term + ": " + entry.getValue() + "\n");
                 counter++;
             }
         }
@@ -103,17 +118,17 @@ public class Search {
     public Map<String, Integer> sortHashMap(Map<String, Integer> freqMap){
         List<Map.Entry<String, Integer>> lst = new LinkedList<>(freqMap.entrySet());
         Collections.sort(lst, new Comparator<>() {
-            // compare reviewFreq object by frequency value
-            @Override
+
             public int compare(Map.Entry<String, Integer> e1, Map.Entry<String, Integer> e2) {
                 return e2.getValue().compareTo(e1.getValue());
             }
         });
-        Map<String, Integer> sortedMap = new ConcurrentHashMap<>();
-        for (Map.Entry<String, Integer> entry : lst)
-        {
+        Map<String, Integer> sortedMap = new LinkedHashMap<>();
+        for (Map.Entry<String, Integer> entry : lst) {
+            //System.out.println("order: " + entry.getValue());
             sortedMap.put(entry.getKey(), entry.getValue());
         }
+
         return sortedMap;
     }
 
