@@ -19,8 +19,7 @@ public class BusinessInfo {
     /**
      * constructor for Review class
      * @param docID document ID
-     * @param asin asin this product
-     * @param reviewText review for this product
+
      */
     public BusinessInfo(int docID, String business_id, String name, String address, String city, String state, String postal_code){
         this.docID = docID;
@@ -53,11 +52,11 @@ public class BusinessInfo {
      * @return review string
      */
     public String toString(){
-        return "businessID: " + business_id + ", "
-                + "name: " + name + ", "
-                + "address: " + address + ", "
-                + "city: " + city + ", "
-                + "state: " + state + ", "
+        return "businessID: " + business_id + "\n "
+                + "name: " + name + "\n "
+                + "address: " + address + "\n "
+                + "city: " + city + "\n "
+                + "state: " + state + "\n "
                 + "postal: " + postal_code;
     }
 }
