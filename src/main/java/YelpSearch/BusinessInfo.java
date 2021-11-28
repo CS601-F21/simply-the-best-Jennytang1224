@@ -1,7 +1,9 @@
+package YelpSearch;
+
 import com.google.gson.annotations.Expose;
 
 /**
- * Reviews class that contains the information about each review object
+ * YelpSearch.Reviews class that contains the information about each review object
  * and methods to access and modify the data
  */
 public class BusinessInfo {
@@ -50,10 +52,10 @@ public class BusinessInfo {
      * @return review string
      */
     public String toString(){
-        return " Name: " + name + "\n "
-                + "Address: " + address + "\n "
-                + "City: " + city + "\n "
-                + "State: " + state + "\n "
-                + "Postal: " + postal_code;
+        return "<br>" + " Name: " + name + "</br>"
+                + "<br>" + "Address: " + address + "</br>"
+                + "<br>" + "City: " + city + "</br>"
+                + "<br>" + "State: " + state + "</br>"
+                + "<br>" + "Postal: " + postal_code + "</br>" ;
     }
 }

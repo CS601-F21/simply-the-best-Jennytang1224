@@ -1,12 +1,26 @@
+package YelpSearch;
+
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Pattern;
 
 public class Search {
     private static final Pattern END_OF_SENTENCE = Pattern.compile(".$");//("\\.\\s+");
-    private Map<String, String> sentenceMap= new ConcurrentHashMap<>(); // sentence -> type
-    private Map<String, Integer> businessWithPosCnt = new ConcurrentHashMap<>(); // businessID -> positiveFreq
+    private Map<String, String> sentenceMap;
+    private Map<String, Integer> businessWithPosCnt;
+    private InvertedIndex invertedIndexRW;
+    private IdMap idMapReviews;
+    private BusinessIdMap idMapBiz;
 
+
+
+    public Search(InvertedIndex invertedIndexRW, IdMap idMapReviews, BusinessIdMap idMapBiz){
+        sentenceMap = new ConcurrentHashMap<>(); // sentence -> type
+        businessWithPosCnt = new ConcurrentHashMap<>(); // businessID -> positiveFreq
+        this.invertedIndexRW = invertedIndexRW;
+        this.idMapReviews = idMapReviews;
+        this.idMapBiz = idMapBiz;
+    }
 
     /**
      * Given a one-word term, display a list of all reviews that contain the exact term.
@@ -14,7 +28,7 @@ public class Search {
      * @param term a given term
      */
     //get review ids where review contains the term
-    public Set<Integer> getReviewIds(String term, InvertedIndex invertedIndexRW){
+    public Set<Integer> getReviewIds(String term){
         if(invertedIndexRW.get(term) == null){
             return null;
         }
@@ -24,11 +38,11 @@ public class Search {
     }
 
 
-    public Map<String, Integer> MakeBusinessWithPosRWsMap(IdMap idMapReviews, InvertedIndex invertedIndexRW, String term){
+    public Map<String, Integer> MakeBusinessWithPosRWsMap(String term){
         int counter = 0;
         int count_long = 0;
         String type;
-        Set<Integer> reviewIds = getReviewIds(term, invertedIndexRW);
+        Set<Integer> reviewIds = getReviewIds(term);
         if(reviewIds == null){
             System.out.println("0 result found! Please try another term.");
             return null;
@@ -84,29 +98,39 @@ public class Search {
                 }
             }
         }
-        System.out.println("count_long:" + count_long);
+        System.out.println("count long reviews:" + count_long);
         return businessWithPosCnt;
     }
 
 
-    public void displayTopKBusiness(String term, Map<String, Integer> businessWithPosCnt, BusinessIdMap businessIdMap, int k){
+    public String displayTopKBusiness(String term, int k){
         int counter = 0;
+        StringBuilder sb = new StringBuilder();
+
+        businessWithPosCnt = MakeBusinessWithPosRWsMap(term);
         if (businessWithPosCnt != null) {
-            System.out.println(" *** Top " + k + " restaurant(s) with best " + term + ": ***");
+            System.out.println(" *** Top " + k + " restaurant(s) with best " + term + " : ***");
+            sb.append("<br>*** Top ").append(k).append(" restaurant(s) with best ").append(term).append(" : *** </br>");
             Map<String, Integer> sorted = sortHashMap(businessWithPosCnt);
             for (Map.Entry<String, Integer> entry : sorted.entrySet()) {
-                //System.out.println(entry.getValue());
                 if (counter >= k) {
                     break;
                 }
                 String businessId = entry.getKey();
-                BusinessInfo bizInfo = businessIdMap.getValue(businessId);
+                BusinessInfo bizInfo = idMapBiz.getValue(businessId);
 
-                System.out.println(bizInfo.toString() + "\n" +
-                        " Number of positive reviews on " + term + ": " + entry.getValue() + "\n");
+                sb.append(bizInfo.toString());
+                sb.append("<br> Number of positive reviews on ").append(term).append(": ").append(entry.getValue()).append("</br>");
+                sb.append("<br> </br>");
                 counter++;
             }
         }
+        else{
+            sb.append("<br>Sorry there's no review related to " + term + "</br>");
+            return sb.toString();
+        }
+        //System.out.println(sb.toString());
+        return sb.toString();
     }
 
 

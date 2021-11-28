@@ -1,11 +1,11 @@
+package YelpSearch;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.regex.Pattern;
 
 
 /**
- * InvertedIndex class a data structure for better searching text.
+ * YelpSearch.InvertedIndex class a data structure for better searching text.
  * its a hashmap maps term -> another frequency hashmap, which maps id -> term frequency in the object with this id
  */
 public class InvertedIndex {
@@ -58,7 +58,7 @@ public class InvertedIndex {
      * @param obj the object we want to add to the invertedIndex
      */
     public void add(Object obj) {
-//        if (((Reviews) obj).getStars() < 4.0){ // only use the review has stars 4 or 5
+//        if (((YelpSearch.Reviews) obj).getStars() < 4.0){ // only use the review has stars 4 or 5
 //            return;
 //        }
 
@@ -66,14 +66,14 @@ public class InvertedIndex {
         List<String> processed = new ArrayList<>();
         docID = ((Reviews) obj).getDocID();
         processed = processText(((Reviews) obj).getReviewText());
-//        processed = SentimentAnalysis.removeStopWords(processText(((Reviews) obj).getReviewText()));
+//        processed = YelpSearch.SentimentAnalysis.removeStopWords(processText(((YelpSearch.Reviews) obj).getReviewText()));
 
         for (String term : processed) {
 //            // if term is
 //            int counter = 0;
 //            String type;
 //            // find sentences with the term
-//            String sentence = findRelatedSentences(((Reviews) obj).getReviewText(), term);
+//            String sentence = findRelatedSentences(((YelpSearch.Reviews) obj).getReviewText(), term);
 //            if(sentence == null){
 //                continue;
 //            }
@@ -83,7 +83,7 @@ public class InvertedIndex {
 //            }
 //            else{ // if haven't been analyzed
 //                //sentiment analysis on the term, avg the score on sentences within same review -> if positive, counter ++
-//                type = SentimentAnalysis.analyze(sentence);
+//                type = YelpSearch.SentimentAnalysis.analyze(sentence);
 //                sentenceMap.put(sentence, type);
 //            }
 //
@@ -134,7 +134,7 @@ public class InvertedIndex {
 //
 //
 //    /**
-//     * sort all values in InvertedIndex map by the frequency
+//     * sort all values in YelpSearch.InvertedIndex map by the frequency
 //     */
 //    public void sortAll(){
 //        for (Map.Entry<String, ConcurrentHashMap<Integer, Integer>> entry: invertedIndexMap.entrySet()) {

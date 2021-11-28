@@ -1,3 +1,5 @@
+package YelpSearch;
+
 import com.google.gson.Gson;
 
 import java.io.*;
@@ -5,7 +7,7 @@ import java.util.*;
 
 /**
  This class reads files and store info to data structures
- lastly it will validate the arguments and run the UI class in the main method
+ lastly it will validate the arguments and run the YelpSearch.UI class in the main method
  */
 public class ProcessData {
 
@@ -113,7 +115,7 @@ public class ProcessData {
 //     */
 //    public static void run(List<String> paths){
 //        if (paths != null && paths.size() == 2) {
-//            UI ui = new UI(paths);
+//            YelpSearch.UI ui = new YelpSearch.UI(paths);
 //            ui.processFiles();
 //            ui.userInput();
 //        }

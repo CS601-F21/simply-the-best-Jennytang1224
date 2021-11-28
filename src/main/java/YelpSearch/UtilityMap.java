@@ -1,7 +1,7 @@
-
+package YelpSearch;
 
 /**
- * UtilityMap class is a data structure to manage InvertedIndex, IdMap and IdAsinMap.
+ * YelpSearch.UtilityMap class is a data structure to manage YelpSearch.InvertedIndex, YelpSearch.IdMap and IdAsinMap.
  * its also a wrap to add/put methods for these three data structure for
  * encapsulation purpose when creating them in reading files
  */

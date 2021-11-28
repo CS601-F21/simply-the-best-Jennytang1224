@@ -1,6 +1,7 @@
+package YelpSearch;
 
 /**
- * Reviews class that contains the information about each review object
+ * YelpSearch.Reviews class that contains the information about each review object
  * and methods to access and modify the data
  */
 public class Reviews {
