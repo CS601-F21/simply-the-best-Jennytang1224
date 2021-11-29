@@ -27,7 +27,6 @@ public class Run {
         List<Object> rwList = ProcessData.readFile(files, "reviews");
         System.out.println("...Finishing reading review file...");
 
-
         for(Object o : rwList){
             if (o instanceof InvertedIndex){
                 invertedIndexRW = (InvertedIndex) o;
@@ -38,9 +37,8 @@ public class Run {
         }
 
         Search search = new Search(invertedIndexRW, idMapRW, idMapBiz);
-        String term = "crepe";
+        String term = "Pizza";
         int k = 3;
-//        Map<String, Integer> businessWithPosCnt = search.MakeBusinessWithPosRWsMap( term);
         System.out.println(search.displayTopKBusiness(term, k));
 
         long endTime = System.currentTimeMillis();
