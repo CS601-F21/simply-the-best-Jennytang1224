@@ -6,13 +6,13 @@ import java.util.regex.Pattern;
 
 public class Search {
     private static final Pattern END_OF_SENTENCE = Pattern.compile(".$");//("\\.\\s+");
+    private static final String trailingRegex = "\\s+$";
+    private static final String leadingRegex =  "^\\s+";
     private Map<String, String> sentenceMap;
-    private Map<String, Integer> businessWithPosCnt;
+    private Map<String, Integer> businessWithPosCnt; //(business id -> pos count)
     private InvertedIndex invertedIndexRW;
     private IdMap idMapReviews;
     private BusinessIdMap idMapBiz;
-
-
 
     public Search(InvertedIndex invertedIndexRW, IdMap idMapReviews, BusinessIdMap idMapBiz){
         sentenceMap = new ConcurrentHashMap<>(); // sentence -> type
@@ -22,24 +22,22 @@ public class Search {
         this.idMapBiz = idMapBiz;
     }
 
-    /**
-     * Given a one-word term, display a list of all reviews that contain the exact term.
-     * results is sorted and the reviews with most frequency will show on the top
-     * @param term a given term
-     */
-    //get review ids where review contains the term
+
+    //get review ids where review contains the term from invertedindex
     public Set<Integer> getReviewIds(String term){
-        if(invertedIndexRW.get(term) == null){
+        if(invertedIndexRW.get(term.toLowerCase()) == null){
             return null;
         }
 
-        Set<Integer> docIds = invertedIndexRW.get(term).keySet();
+        Set<Integer> docIds = invertedIndexRW.get(term.toLowerCase()).keySet();
         return docIds;
     }
 
 
+    // use reviewIds to get reviews, keep only 5 stars review,
+    // select sentence only contains the term in the review, (filter out sentence more than 15 words long) and use sentiment analysis
+    // if positive add to the business
     public Map<String, Integer> MakeBusinessWithPosRWsMap(String term){
-        int counter = 0;
         int count_long = 0;
         String type;
         Set<Integer> reviewIds = getReviewIds(term);
@@ -55,40 +53,29 @@ public class Search {
                 continue;
             }
             //extract the sentence contains the key
-            counter++;
-            //System.out.println("----> count num of 5-star reviews with the term: " + counter);
             String sentence = findRelatedSentences(review.getReviewText(), term);
-//            String sentence = review.getReviewText().toLowerCase();
             if(sentence == null){
                 continue;
             }
+            sentence = sentence.replaceAll(leadingRegex, "").replaceAll(trailingRegex,"");
+            List<String> lst = SentimentAnalysis.removeStopWords(sentence.split(" "));
 
-            if(sentence.split(" ").length > 15){
-//                System.out.println(sentence);
-
+            String newSentence = String.join(" ", lst);
+            if(newSentence.split(" ").length > 20){
                 count_long++;
-//                String newSentence = "";
-//                for (int i = 0; i < 10; i++) {
-//                    newSentence = newSentence + " " + sentence.split(" ")[i];
-//                }
-//                sentence = newSentence;
                 continue;
             }
             //check if sentence has been analyzed already
-            if(sentenceMap.containsKey(sentence)){
-                type = sentenceMap.get(sentence);
+            if(sentenceMap.containsKey(newSentence)){
+                type = sentenceMap.get(newSentence);
             }
-            // if haven't been analyzed
-            else{
+            else{  // if haven't been analyzed
                 //sentiment analysis on the term, avg the score on sentences within same review -> if positive, counter ++
-                type = SentimentAnalysis.analyze(sentence.toLowerCase());
-                sentenceMap.put(sentence, type);
+                type = SentimentAnalysis.analyze(newSentence.toLowerCase());
+                sentenceMap.put(newSentence, type);
             }
-
             //System.out.println(term + " ->  " + type + ": \n" + sentence);
-
             if(type.equalsIgnoreCase("very positive") || type.equalsIgnoreCase("positive")) {
-                //positiveReviewIds.add(id);
                 String businessId = review.getBusiness_id();
                 if(!businessWithPosCnt.containsKey(businessId)) {
                     businessWithPosCnt.put(businessId, 1);
@@ -102,7 +89,7 @@ public class Search {
         return businessWithPosCnt;
     }
 
-
+    // use businessWithPosCnt map
     public String displayTopKBusiness(String term, int k){
         int counter = 0;
         StringBuilder sb = new StringBuilder();
@@ -129,7 +116,6 @@ public class Search {
             sb.append("<br>Sorry there's no review related to " + term + "</br>");
             return sb.toString();
         }
-        //System.out.println(sb.toString());
         return sb.toString();
     }
 
@@ -142,14 +128,12 @@ public class Search {
     public Map<String, Integer> sortHashMap(Map<String, Integer> freqMap){
         List<Map.Entry<String, Integer>> lst = new LinkedList<>(freqMap.entrySet());
         Collections.sort(lst, new Comparator<>() {
-
             public int compare(Map.Entry<String, Integer> e1, Map.Entry<String, Integer> e2) {
                 return e2.getValue().compareTo(e1.getValue());
             }
         });
         Map<String, Integer> sortedMap = new LinkedHashMap<>();
         for (Map.Entry<String, Integer> entry : lst) {
-            //System.out.println("order: " + entry.getValue());
             sortedMap.put(entry.getKey(), entry.getValue());
         }
 
@@ -159,13 +143,7 @@ public class Search {
 
     //find first sentence within a review with a given term
     public String findRelatedSentences(String reviewText, String term){
-//        String sentence = END_OF_SENTENCE.splitAsStream(term)
-//                .filter(s -> s.toLowerCase().contains(term.toLowerCase()))
-//                .findAny()
-//                .orElse(null); // return first match, if no match, return whole thing
-//        return sentence;
         final String lcword = term.toLowerCase();
-//        for (String sentence : END_OF_SENTENCE.split(reviewText)) {
         for (String sentence : reviewText.split("[,?.@!;-]+", -2)) {
             if (sentence.toLowerCase().contains(lcword)) {
                 return sentence;
@@ -173,32 +151,5 @@ public class Search {
         }
         return null;
     }
-
-
-
-
-//
-//
-//    /**
-//     * given a list of doc ids display the content
-//     * @param idList a list of ids
-//     */
-//    public String displayContent(Set<Integer> idList){
-//        StringBuffer sb = new StringBuffer();
-//        if(idList.size() == 0){
-//            System.out.println(idList.size() + " result(s) found:");
-//            sb.append("<br>" + idList.size()).append(" result found! Please try another term. </br>");
-//        }
-//        else{
-//            System.out.println(idList.size() + " result(s) found:");
-//            sb.append("<br>" + idList.size()).append(" result(s) found: </br>");
-//        }
-//
-//        for (int id : idList) {
-//            sb.append(idMapRW.displayText(id));
-//        }
-//
-//        return sb.toString();
-//    }
 
 }
