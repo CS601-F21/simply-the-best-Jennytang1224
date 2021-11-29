@@ -7,7 +7,7 @@ import java.util.List;
 public class SearchApplication {
 
     public static void main(String[] args) {
-        int port = 8080;
+        int port = 8081;
         HttpServer server = new HttpServer(port);
         List<String> files = new ArrayList<>();
 

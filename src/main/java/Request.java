@@ -62,10 +62,7 @@ public class Request {
             return false;
         }
         String[] requestBody = body.split("=");
-        if(//(!requestBody[0].equals("asin") && path.equals("/find"))
-//                || (!requestBody[0].equals("message") &&  path.equals("/slackbot"))
-               // ||
-        (!requestBody[0].equals("query") && path.equals("/reviewsearch"))){
+        if(!requestBody[0].equals("query") && path.equals("/yelpsearch")){
             return false;
         }
         return true;
@@ -82,11 +79,7 @@ public class Request {
         if (!method.equals(HttpConstants.GET) && !method.equals(HttpConstants.POST)) {
             return "405"; // method not allowed
         }
-        else if (!path.equals(HTTPServerConstants.REVIEW_SEARCH)
-//                && !path.equals(HTTPServerConstants.FIND)
-//                && !path.equals(HTTPServerConstants.SLACKBOT)
-        )
-        {
+        else if (!path.equals(HTTPServerConstants.REVIEW_SEARCH)) {
             return "404";// not found
         }
         else if(!version.equals("HTTP/1.1")){

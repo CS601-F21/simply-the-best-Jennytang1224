@@ -32,8 +32,6 @@ public class Response {
     public void returnXHTML(PrintWriter writer, String header){
         StringBuffer xhtml = new StringBuffer();
         xhtml.append(header);
-//        String[] lst = result.split(" ");
-//        String term = lst[6];
         xhtml.append("<h3>Top 3 Restaurants in Portland: </h3>\n");
         xhtml.append("<ul>\n");
         xhtml.append(result);
