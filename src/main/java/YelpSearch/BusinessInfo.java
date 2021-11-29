@@ -1,7 +1,5 @@
 package YelpSearch;
 
-import com.google.gson.annotations.Expose;
-
 /**
  * YelpSearch.Reviews class that contains the information about each review object
  * and methods to access and modify the data

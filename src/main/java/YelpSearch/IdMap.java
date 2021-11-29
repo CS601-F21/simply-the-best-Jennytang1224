@@ -1,15 +1,15 @@
 package YelpSearch;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
 
 
 /**
  * idMap data structure is a hashmap that maps Id to Review objects
  */
 public class IdMap{
-    private final Map<Integer, Object> idMap = new ConcurrentHashMap<>();
+    private final Map<Integer, Object> idMap = new HashMap<>(); //(id -> review obj)
 
     /**
      * add items to the idMap

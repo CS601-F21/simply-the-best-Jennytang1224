@@ -1,10 +1,10 @@
 package YelpSearch;
 
+import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 public class BusinessIdMap {
-    private final Map<String, Object> businessIdMap =  new ConcurrentHashMap<>();
+    private final Map<String, Object> businessIdMap =  new HashMap<>(); //(businessID -> business obj)
 
     public void put(String businessId, Object obj){
         businessIdMap.put(businessId, obj);

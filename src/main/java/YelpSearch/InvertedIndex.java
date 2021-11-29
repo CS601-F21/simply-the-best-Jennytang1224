@@ -1,8 +1,6 @@
 package YelpSearch;
 
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
-
 
 /**
  * YelpSearch.InvertedIndex class a data structure for better searching text.
@@ -10,7 +8,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class InvertedIndex {
 
-    private final Map<String, ConcurrentHashMap<Integer, Integer>> invertedIndexMap = new ConcurrentHashMap<>();
+    private final Map<String, HashMap<Integer, Integer>> invertedIndexMap = new HashMap<>();
 
     /**
      * strip strip non alphanumeric in a word
@@ -58,43 +56,16 @@ public class InvertedIndex {
      * @param obj the object we want to add to the invertedIndex
      */
     public void add(Object obj) {
-//        if (((YelpSearch.Reviews) obj).getStars() < 4.0){ // only use the review has stars 4 or 5
-//            return;
-//        }
-
         int docID = 0;
         List<String> processed = new ArrayList<>();
         docID = ((Reviews) obj).getDocID();
         processed = processText(((Reviews) obj).getReviewText());
-//        processed = YelpSearch.SentimentAnalysis.removeStopWords(processText(((YelpSearch.Reviews) obj).getReviewText()));
 
         for (String term : processed) {
-//            // if term is
-//            int counter = 0;
-//            String type;
-//            // find sentences with the term
-//            String sentence = findRelatedSentences(((YelpSearch.Reviews) obj).getReviewText(), term);
-//            if(sentence == null){
-//                continue;
-//            }
-//
-//            if(sentenceMap.containsKey(sentence)){ //check if sentence has been analyzed already
-//                type = sentenceMap.get(sentence);
-//            }
-//            else{ // if haven't been analyzed
-//                //sentiment analysis on the term, avg the score on sentences within same review -> if positive, counter ++
-//                type = YelpSearch.SentimentAnalysis.analyze(sentence);
-//                sentenceMap.put(sentence, type);
-//            }
-//
-//            System.out.println(term + " " + type + ": \n" + sentence);
-
-//            if(type.equalsIgnoreCase("very positive") || type.equalsIgnoreCase("positive")) {
-
             if (!invertedIndexMap.containsKey(term)) {
-                Map<Integer, Integer> freq = new ConcurrentHashMap<>();
+                Map<Integer, Integer> freq = new HashMap<>();
                 freq.put(docID, 1);
-                invertedIndexMap.put(term, (ConcurrentHashMap<Integer, Integer>) freq);
+                invertedIndexMap.put(term, (HashMap<Integer, Integer>) freq);
 
             } else if (invertedIndexMap.containsKey(term) && !containsDocId(docID, term)) {
                 invertedIndexMap.get(term).put(docID, 1);
@@ -103,53 +74,15 @@ public class InvertedIndex {
                 int count = invertedIndexMap.get(term).get(docID);
                 invertedIndexMap.get(term).put(docID, count + 1);
             }
-
         }
     }
-
-
-//
-//    /**
-//     * in a frequency hashmap, sort the docID(keys) by frequency(values)
-//     * @param freqMap this is the value field in invertedMap <id -> freq>
-//     * @return a sorted freqMap
-//     */
-//    public Map<Integer, Integer> sortHashMap(ConcurrentHashMap<Integer, Integer> freqMap){
-//        List<Map.Entry<Integer, Integer>> lst = new LinkedList<>(freqMap.entrySet());
-//        Collections.sort(lst, new Comparator<>() {
-//            // compare reviewFreq object by frequency value
-//            @Override
-//            public int compare(Map.Entry<Integer, Integer> e1, Map.Entry<Integer, Integer> e2) {
-//                return e2.getValue().compareTo(e1.getValue());
-//            }
-//        });
-//        Map<Integer, Integer> sortedMap = new ConcurrentHashMap<>();
-//        for (Map.Entry<Integer, Integer> entry : lst)
-//        {
-//            sortedMap.put(entry.getKey(), entry.getValue());
-//        }
-//        return sortedMap;
-//
-//    }
-//
-//
-//    /**
-//     * sort all values in YelpSearch.InvertedIndex map by the frequency
-//     */
-//    public void sortAll(){
-//        for (Map.Entry<String, ConcurrentHashMap<Integer, Integer>> entry: invertedIndexMap.entrySet()) {
-//            Map<Integer, Integer> sorted = sortHashMap(entry.getValue());
-//            entry.setValue((ConcurrentHashMap<Integer, Integer>) sorted);
-//        }
-//    }
-
 
     /**
      * return the value in the map associated with the term
      * @param  term a given term
      * @return value in the invertedIndex associated with the term
      */
-    public ConcurrentHashMap<Integer, Integer> get(String term) {
+    public HashMap<Integer, Integer> get(String term) {
         return invertedIndexMap.get(term);
     }
 
@@ -169,7 +102,7 @@ public class InvertedIndex {
      */
     public int size(){
         int size = 0;
-        for (Map.Entry<String, ConcurrentHashMap<Integer, Integer>> entry: invertedIndexMap.entrySet()) {
+        for (Map.Entry<String, HashMap<Integer, Integer>> entry: invertedIndexMap.entrySet()) {
             size++;
         }
         return size;
