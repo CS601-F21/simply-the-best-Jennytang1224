@@ -1,7 +1,6 @@
 package YelpSearch;
 
 import edu.stanford.nlp.ling.CoreAnnotations;
-import edu.stanford.nlp.neural.rnn.RNNCoreAnnotations;
 import edu.stanford.nlp.pipeline.Annotation;
 import edu.stanford.nlp.pipeline.StanfordCoreNLP;
 import edu.stanford.nlp.sentiment.SentimentCoreAnnotations;
@@ -11,6 +10,8 @@ import edu.stanford.nlp.util.CoreMap;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Properties;
 
@@ -30,24 +31,24 @@ public class SentimentAnalysis {
         stopwords = Files.readAllLines(Paths.get("data/stopwords.txt"));
     }
 
-    public static List<String> removeStopWords(List<String> tokens){
+    public static List<String> removeStopWords(String[] strArr){
+        List<String> tokens = new LinkedList<String>(Arrays.asList(strArr));
         tokens.removeAll(stopwords);
         return tokens;
     }
 
 
     public static String analyze(String review) {
-        int mainSentiment = 0;
+       // int mainSentiment = 0;
         String type = "None";
         if (review != null && review.length() > 0) {
-            int longest = 0;
+           // int longest = 0;
             Annotation annotation = pipeline.process(review);
             for (CoreMap sentence : annotation.get(CoreAnnotations.SentencesAnnotation.class)) {
-                Tree tree = sentence.get(SentimentCoreAnnotations.SentimentAnnotatedTree.class);
-                int sentiment = RNNCoreAnnotations.getPredictedClass(tree);
+                //Tree tree = sentence.get(SentimentCoreAnnotations.SentimentAnnotatedTree.class);
+                //int sentiment = RNNCoreAnnotations.getPredictedClass(tree);
                 type = sentence.get(SentimentCoreAnnotations.SentimentClass.class);
             }
-
         }
         return type;
     }
