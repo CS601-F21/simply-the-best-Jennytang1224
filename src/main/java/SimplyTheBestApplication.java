@@ -1,11 +1,12 @@
-package HTTP;
-
+import HTTP.HTTPServerConstants;
+import HTTP.HttpServer;
+import HTTP.ReviewSearchHandler;
 import YelpSearch.UI;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class SearchApplication {
+public class SimplyTheBestApplication {
 
     public static void main(String[] args) {
         int port = 8081;
