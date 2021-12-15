@@ -1,3 +1,5 @@
+package HTTP;
+
 /**
  * A helper class to store various constants used for the HTTP server.
  */
@@ -10,7 +12,7 @@ public class HttpConstants {
     public static final String OK = "200 OK";
     public static final String NOT_FOUND = "404 Not Found";
     public static final String NOT_ALLOWED = "405 Method Not Allowed";
-    public static final String BAD_REQUEST = "400 Bad Request";
+    public static final String BAD_REQUEST = "400 Bad HTTP.Request";
     public static final String INTERNAL_SERVER_ERROR = "500 Internal Server Error";
     public static final String HTTP_VERSION_NOT_SUPPORTED = "505 Http version not supported";
 

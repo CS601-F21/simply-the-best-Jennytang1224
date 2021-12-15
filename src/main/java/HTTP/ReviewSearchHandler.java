@@ -1,3 +1,5 @@
+package HTTP;
+
 import YelpSearch.Search;
 import YelpSearch.UI;
 
@@ -53,7 +55,8 @@ public class ReviewSearchHandler implements Handler{
                 // if method is POST
                 } else if (method.equals(HttpConstants.POST)){
                     doPost(request, response);
-                    response.returnXHTML(writer, HTTPServerConstants.REVIEW_SEARCH_PAGE_HEADER);
+                    String headerStr = HTTPServerConstants.PAGE_HEADER + HTTPServerConstants.REVIEW_SEARCH_PAGE_HEADER;
+                    response.returnXHTML(writer, headerStr);
                 }
             }
             catch(IOException ioe) {
@@ -72,7 +75,6 @@ public class ReviewSearchHandler implements Handler{
         System.out.println(result);
         response.setResult(result);
         response.setHTTPStatusCode("200");
-
     }
 
 

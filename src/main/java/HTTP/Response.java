@@ -1,3 +1,5 @@
+package HTTP;
+
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -32,21 +34,15 @@ public class Response {
     public void returnXHTML(PrintWriter writer, String header){
         StringBuffer xhtml = new StringBuffer();
         xhtml.append(header);
-        xhtml.append("<h3>Top 3 Restaurants in Portland: </h3>\n");
+        //xhtml.append("<center><h1>Top 3 in Portland: </h1></center>\n");
         xhtml.append("<ul>\n");
-        xhtml.append(result);
+        xhtml.append("<center>" + result + "</center>");
         xhtml.append("</ul>\n");
         xhtml.append(HTTPServerConstants.PAGE_FOOTER);
-        try{
 
-            if (HtmlValidator.isValid(xhtml.toString())) {
                 ServerUtils.send200(writer);
                 writer.println(xhtml.toString());
-            }
-        } catch(ParserConfigurationException | IOException | SAXException e){
-            ServerUtils.send400(writer);
-            return;
-        }
+
     }
 
     public void setHTTPStatusCode(String statusCode){

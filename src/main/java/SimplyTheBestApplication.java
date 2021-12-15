@@ -1,3 +1,4 @@
+package HTTP;
 
 import YelpSearch.UI;
 
