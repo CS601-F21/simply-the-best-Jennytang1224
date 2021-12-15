@@ -5,9 +5,10 @@ package HTTP;
  */
 public class HTTPServerConstants {
 
-    public static final String REVIEW_SEARCH = "/simplythebest";
+    public static final String ENDPOINT = "/simplythebest";
     public static final String REVIEWFILE = "data/yelp_academic_dataset_review_food.json";
     public static final String BUSINESSFILE = "data/yelp_academic_dataset_business_food.json";
+    public static final String STOPWORDS = "data/stopwords.txt";
 
 
     public static final String REVIEW_SEARCH_PAGE_HEADER = "<!DOCTYPE html>\n" +
@@ -56,5 +57,9 @@ public class HTTPServerConstants {
             PAGE_FOOTER;
 
     public static final String GET_BUTTON = "<center><a style=\"color:#ffffff;\" href=\"/simplythebest\">Search More</a></center>";
+
+    public static final String TRAILING_REGEX = "\\s+$";
+    public static final String LEADING_REGEX =  "^\\s+";
+    public static final String END_OF_SENTENCE = "[,?.@!;-]+";
 
 }

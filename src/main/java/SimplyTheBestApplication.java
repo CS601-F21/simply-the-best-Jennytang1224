@@ -18,7 +18,7 @@ public class SimplyTheBestApplication {
         UI ui = new UI(files);
         ui.processFiles();
 
-        server.addMapping("/simplythebest", new ReviewSearchHandler(ui));
+        server.addMapping(HTTPServerConstants.ENDPOINT, new ReviewSearchHandler(ui));
         server.startup();
     }
 }

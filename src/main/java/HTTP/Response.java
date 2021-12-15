@@ -34,9 +34,7 @@ public class Response {
     public void returnXHTML(PrintWriter writer, String header){
         StringBuffer xhtml = new StringBuffer();
         xhtml.append(header);
-        xhtml.append("<ul>\n");
-        xhtml.append("<center>" + result + "</center>");
-        xhtml.append("</ul>\n");
+        xhtml.append("<ul><center>" + result + "</center></ul>");
         xhtml.append(HTTPServerConstants.GET_BUTTON);
         xhtml.append(HTTPServerConstants.PAGE_FOOTER);
         ServerUtils.send200(writer);

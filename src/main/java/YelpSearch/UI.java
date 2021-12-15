@@ -25,8 +25,6 @@ public class UI {
      * read both review and business files
      */
     public void processFiles(){
-        String log4jConfPath = "src/main/resource/log4j.properties";
-        PropertyConfigurator.configure(log4jConfPath);
         SentimentAnalysis.init();
         try {
             SentimentAnalysis.loadStopWords();
@@ -34,7 +32,6 @@ public class UI {
         catch(IOException e){
             System.out.println("fail to load stop words");
         }
-
         long startTime = System.currentTimeMillis();
 
         List<Object> bizList = ProcessData.readFile(paths, "business");

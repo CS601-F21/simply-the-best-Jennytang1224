@@ -1,5 +1,6 @@
 package YelpSearch;
 
+import HTTP.HTTPServerConstants;
 import edu.stanford.nlp.ling.CoreAnnotations;
 import edu.stanford.nlp.pipeline.Annotation;
 import edu.stanford.nlp.pipeline.StanfordCoreNLP;
@@ -31,12 +32,14 @@ public class SentimentAnalysis {
      * load stopwords
      */
     public static void loadStopWords() throws IOException {
-        stopwords = Files.readAllLines(Paths.get("data/stopwords.txt"));
+        stopwords = Files.readAllLines(Paths.get(HTTPServerConstants.STOPWORDS));
     }
 
 
     /**
      * remove stopwords
+     * @param strArr
+     * @return list of tokens
      */
     public static List<String> removeStopWords(String[] strArr){
         List<String> tokens = new LinkedList<String>(Arrays.asList(strArr));
@@ -46,6 +49,8 @@ public class SentimentAnalysis {
 
     /**
      * analyze sentiment
+     * @param review
+     * @return type
      */
     public static String analyze(String review) {
         String type = "None";

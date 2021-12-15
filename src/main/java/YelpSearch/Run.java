@@ -1,11 +1,12 @@
 package YelpSearch;
 
+import HTTP.HTTPServerConstants;
 import org.apache.log4j.PropertyConfigurator;
 import java.io.IOException;
 import java.util.*;
 
 /**
- * For testing purpose
+ * For testing command line purpose
  */
 public class Run {
     public static void main(String[] args) throws IOException {
@@ -20,8 +21,8 @@ public class Run {
         SentimentAnalysis.init();
         SentimentAnalysis.loadStopWords();
 
-        files.add("data/yelp_academic_dataset_business_food.json");
-        files.add("data/yelp_academic_dataset_review_food.json");
+        files.add(HTTPServerConstants.BUSINESSFILE);
+        files.add(HTTPServerConstants.REVIEWFILE);
 
         List<Object> bizList = ProcessData.readFile(files, "business");
         idMapBiz = (BusinessIdMap) bizList.get(0);

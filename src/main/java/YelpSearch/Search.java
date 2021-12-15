@@ -4,12 +4,8 @@ import HTTP.HTTPServerConstants;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.regex.Pattern;
 
 public class Search {
-    private static final Pattern END_OF_SENTENCE = Pattern.compile(".$");//("\\.\\s+");
-    private static final String trailingRegex = "\\s+$";
-    private static final String leadingRegex =  "^\\s+";
     private Map<String, String> sentenceMap;
     private Map<String, Integer> businessWithPosCnt; //(business id -> pos count)
     private InvertedIndex invertedIndexRW;
@@ -25,22 +21,28 @@ public class Search {
     }
 
 
-    //get review ids where review contains the term from invertedindex
+    /**
+     * get review ids where review contains the term from invertedindex
+     * @param term
+     * @return set of integers, review ids
+     */
     public Set<Integer> getReviewIds(String term){
         if(invertedIndexRW.get(term.toLowerCase()) == null){
             return null;
         }
-
         Set<Integer> docIds = invertedIndexRW.get(term.toLowerCase()).keySet();
         return docIds;
     }
 
 
-    // use reviewIds to get reviews, keep only 5 stars review,
-    // select sentence only contains the term in the review, (filter out sentence more than 15 words long) and use sentiment analysis
-    // if positive add to the business
+    /**
+     * use reviewIds to get reviews, keep only 5 stars review,
+     * select sentence only contains the term in the review, (filter out sentence more than 15 words long) and use sentiment analysis
+     * if positive add to the business
+     * @param term
+     * @return map
+     */
     public Map<String, Integer> MakeBusinessWithPosRWsMap(String term){
-        int count_long = 0;
         String type;
         Set<Integer> reviewIds = getReviewIds(term);
         if(reviewIds == null){
@@ -59,12 +61,11 @@ public class Search {
             if(sentence == null){
                 continue;
             }
-            sentence = sentence.replaceAll(leadingRegex, "").replaceAll(trailingRegex,"");
+            sentence = sentence.replaceAll(HTTPServerConstants.LEADING_REGEX, "").replaceAll(HTTPServerConstants.TRAILING_REGEX,"");
             List<String> lst = SentimentAnalysis.removeStopWords(sentence.split(" "));
 
             String newSentence = String.join(" ", lst);
             if(newSentence.split(" ").length > 20){
-                count_long++;
                 continue;
             }
             //check if sentence has been analyzed already
@@ -76,7 +77,6 @@ public class Search {
                 type = SentimentAnalysis.analyze(newSentence.toLowerCase());
                 sentenceMap.put(newSentence, type);
             }
-            //System.out.println(term + " ->  " + type + ": \n" + sentence);
             if(type.equalsIgnoreCase("very positive") || type.equalsIgnoreCase("positive")) {
                 String businessId = review.getBusiness_id();
                 if(!businessWithPosCnt.containsKey(businessId)) {
@@ -87,11 +87,16 @@ public class Search {
                 }
             }
         }
-        System.out.println("count long reviews:" + count_long);
         return businessWithPosCnt;
     }
 
-    // use businessWithPosCnt map
+
+    /**
+     * display top k business
+     * @param term
+     * @param k
+     * @return string
+     */
     public String displayTopKBusiness(String term, int k){
         int counter = 0;
         StringBuilder sb = new StringBuilder();
@@ -106,7 +111,6 @@ public class Search {
                 }
                 String businessId = entry.getKey();
                 BusinessInfo bizInfo = idMapBiz.getValue(businessId);
-
                 sb.append(bizInfo.toString());
                 sb.append("<h3> Number of positive reviews on ").append(term).append(": ").append(entry.getValue()).append("</h3>");
                 sb.append("<br> ---------------------------------------------------------------------------------- </br>");
@@ -142,10 +146,15 @@ public class Search {
     }
 
 
-    //find first sentence within a review with a given term
+    /**
+     * find first sentence within a review with a given term
+     * @param reviewText
+     * @param term
+     * @return string
+     */
     public String findRelatedSentences(String reviewText, String term){
         final String lcword = term.toLowerCase();
-        for (String sentence : reviewText.split("[,?.@!;-]+", -2)) {
+        for (String sentence : reviewText.split(HTTPServerConstants.END_OF_SENTENCE, -2)) {
             if (sentence.toLowerCase().contains(lcword)) {
                 return sentence;
             }

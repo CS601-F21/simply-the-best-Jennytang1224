@@ -64,7 +64,7 @@ public class Request {
             return false;
         }
         String[] requestBody = body.split("=");
-        if(!requestBody[0].equals("query") && path.equals("/simplythebest")){
+        if(!requestBody[0].equals("query") && path.equals(HTTPServerConstants.ENDPOINT)){
             return false;
         }
         return true;
@@ -81,7 +81,7 @@ public class Request {
         if (!method.equals(HttpConstants.GET) && !method.equals(HttpConstants.POST)) {
             return "405"; // method not allowed
         }
-        else if (!path.equals(HTTPServerConstants.REVIEW_SEARCH)) {
+        else if (!path.equals(HTTPServerConstants.ENDPOINT)) {
             return "404";// not found
         }
         else if(!version.equals("HTTP/1.1")){

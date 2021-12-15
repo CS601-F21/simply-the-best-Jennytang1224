@@ -20,8 +20,6 @@ public class HttpConstants {
     public static final String CONTENT_LENGTH = "Content-Length:";
     public static final String CONNECTION_CLOSE = "Connection: close";
 
-    public static final String FILE_PATH = "/files";
-
 
     public static final String NOT_FOUND_PAGE = "<!DOCTYPE html>\n" +
             "<html xmlns=\"http://www.w3.org/1999/xhtml\">\n" +
