@@ -4,7 +4,6 @@ import edu.stanford.nlp.ling.CoreAnnotations;
 import edu.stanford.nlp.pipeline.Annotation;
 import edu.stanford.nlp.pipeline.StanfordCoreNLP;
 import edu.stanford.nlp.sentiment.SentimentCoreAnnotations;
-import edu.stanford.nlp.trees.Tree;
 import edu.stanford.nlp.util.CoreMap;
 
 import java.io.IOException;
@@ -27,26 +26,24 @@ public class SentimentAnalysis {
     }
 
 
+    //load stopwords
     public static void loadStopWords() throws IOException {
         stopwords = Files.readAllLines(Paths.get("data/stopwords.txt"));
     }
 
+    //remove stopwords
     public static List<String> removeStopWords(String[] strArr){
         List<String> tokens = new LinkedList<String>(Arrays.asList(strArr));
         tokens.removeAll(stopwords);
         return tokens;
     }
 
-
+    //remove stop words
     public static String analyze(String review) {
-       // int mainSentiment = 0;
         String type = "None";
         if (review != null && review.length() > 0) {
-           // int longest = 0;
             Annotation annotation = pipeline.process(review);
             for (CoreMap sentence : annotation.get(CoreAnnotations.SentencesAnnotation.class)) {
-                //Tree tree = sentence.get(SentimentCoreAnnotations.SentimentAnnotatedTree.class);
-                //int sentiment = RNNCoreAnnotations.getPredictedClass(tree);
                 type = sentence.get(SentimentCoreAnnotations.SentimentClass.class);
             }
         }

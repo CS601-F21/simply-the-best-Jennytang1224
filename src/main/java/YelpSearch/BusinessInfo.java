@@ -50,10 +50,10 @@ public class BusinessInfo {
      * @return review string
      */
     public String toString(){
-        return "<br>" + " Name: " + name + "</br>"
-                + "<br>" + "Address: " + address + "</br>"
-                + "<br>" + "City: " + city + "</br>"
-                + "<br>" + "State: " + state + "</br>"
-                + "<br>" + "Postal: " + postal_code + "</br>" ;
+        return "<h1>" + name + "</h1>"
+                + "<h3>" + "Address: " + address + "</h3>"
+                + "<h3>" + "City: " + city + "</h3>"
+                + "<h3>" + "State: " + state + "</h3>"
+                + "<h3>" + "Postal: " + postal_code + "</h3>" ;
     }
 }

@@ -111,8 +111,8 @@ public class Search {
                 BusinessInfo bizInfo = idMapBiz.getValue(businessId);
 
                 sb.append(bizInfo.toString());
-                sb.append("<br> Number of positive reviews on ").append(term).append(": ").append(entry.getValue()).append("</br>");
-                sb.append("<br> </br>");
+                sb.append("<h3> Number of positive reviews on ").append(term).append(": ").append(entry.getValue()).append("</h3>");
+                sb.append("<br> ---------------------------------------------------------------------------------- </br>");
                 counter++;
             }
         }
