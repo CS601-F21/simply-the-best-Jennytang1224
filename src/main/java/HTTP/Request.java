@@ -64,7 +64,7 @@ public class Request {
             return false;
         }
         String[] requestBody = body.split("=");
-        if(!requestBody[0].equals("query") && path.equals("/yelpsearch")){
+        if(!requestBody[0].equals("query") && path.equals("/simplythebest")){
             return false;
         }
         return true;

@@ -38,10 +38,11 @@ public class Response {
         xhtml.append("<ul>\n");
         xhtml.append("<center>" + result + "</center>");
         xhtml.append("</ul>\n");
+        xhtml.append(HTTPServerConstants.GET_BUTTON);
         xhtml.append(HTTPServerConstants.PAGE_FOOTER);
 
-                ServerUtils.send200(writer);
-                writer.println(xhtml.toString());
+        ServerUtils.send200(writer);
+        writer.println(xhtml.toString());
 
     }
 

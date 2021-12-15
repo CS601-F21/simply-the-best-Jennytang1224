@@ -75,6 +75,7 @@ public class ReviewSearchHandler implements Handler{
         System.out.println(result);
         response.setResult(result);
         response.setHTTPStatusCode("200");
+
     }
 
 

@@ -5,7 +5,7 @@ package HTTP;
  */
 public class HTTPServerConstants {
 
-    public static final String REVIEW_SEARCH = "/yelpsearch";
+    public static final String REVIEW_SEARCH = "/simplythebest";
     public static final String REVIEWFILE = "data/yelp_academic_dataset_review_food.json";
     public static final String BUSINESSFILE = "data/yelp_academic_dataset_business_food.json";
 
@@ -48,12 +48,13 @@ public class HTTPServerConstants {
 
     public static final String GET_REVIEW_SEARCH_PAGE = PAGE_HEADER + REVIEW_SEARCH_PAGE_HEADER +
             WELCOME_MSG_PART1 +
-            "<center><form action=\"/yelpsearch\" method=\"post\">\n" +
-          //  "  <label for=\"msg\">What food would you like to find in Portland:</label><br/>\n" +
+            "<center><form action=\"/simplythebest\" method=\"post\">\n" +
             "  <input font-size: inherit;type=\"text\" id=\"query\" name=\"query\"/><br/>\n" +
             WELCOME_MSG_PART2 +
             "  <input type=\"submit\" value=\"Let's go\"/>\n" +
             "</form></center>" +
             PAGE_FOOTER;
+
+    public static final String GET_BUTTON = "<center><a style=\"color:#ffffff;\" href=\"/simplythebest\">Search More</a></center>";
 
 }
