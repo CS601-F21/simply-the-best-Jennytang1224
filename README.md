@@ -8,7 +8,8 @@ This project is based on a real life problem to solve: we all know yelp restaura
 ## Implementation Details: 
 ### Acquire data: 
 
-Data downloaded from Kaggle
+Data downloaded from Kaggle: https://www.kaggle.com/yelp-dataset/yelp-dataset
+
 
 ### Process Data:
 Use pythons Jupiter notebook to process and analyze data. Due to the large volume of the data, I did segmentation on data and only focus on:
@@ -66,7 +67,7 @@ I'm using StanfordCoreNLP tool for sentiment analysis, it took a while to run si
         #3: ”Acme Bread Company,  1 Ferry Bldg, San Francisco, 94111,  40 positive comments on “croissant”
 
 
-## run the program:
+## Run the program:
 It's running on localhost port 8081, so use the link: http://localhost:8081/simplythebest after starting the server
 
 ## Future work:
