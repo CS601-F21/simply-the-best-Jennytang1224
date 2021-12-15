@@ -13,7 +13,7 @@ Use pythons Jupiter notebook to process and analyze data. Due to the large volum
 - Among all 160,585 businesses, there're 29,469 businesses about food. I only focus on Food related business by filtering the business contains "food" in their category.
 - food in Portland - because Portland has the most food related businesses (3935 businesses) among all other 395 cities 
 - Only look at the reviews since 2018 (most recent 3 years) because they are more reliable comparing to the reviews from 10 years ago
-
+- After date preprocessing, I'm keeping 112,381 most recent 3 years reviews, related to 3935 food related businesses in Portland.
 
 ### Search in the reviews:
 
@@ -33,6 +33,9 @@ Details:
 - create the map for business with positive reviews for this term and sort them by number of positive reviews
 
 - return top 3 businesses with the most positive reviews toward the term
+
+Challenges:
+- Im using StanfordCoreNLP tool for sentiment analysis, it took a while to run since its checking word by word see if they are positive or negative and generate the average score of the sentence to decide if its a positive sentence or negative. Therefore, in order to run in a quicker way, I removed the sentence contains the term that is longer than 15 words for the performance purpose. 
 
 
 
