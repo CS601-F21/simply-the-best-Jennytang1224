@@ -7,19 +7,12 @@ import java.util.*;
 
 /**
  This class reads files and store info to data structures
- lastly it will validate the arguments and run the YelpSearch.UI class in the main method
  */
 public class ProcessData {
 
     private static Set<String> bizId = new HashSet<>();
 
-    /**  This method reads review and qa file and store the following:
-     - store term as key and <id -> frequency> as value to invertedIndex data structure
-     - store id as key and review/ qa object as key to idMap data structure
-     - store id as key and asin as value to idAsinMap data structure
-     * @param filePaths a list of file paths
-     * @param type file type
-     * @return a list of object that hold info
+    /**  This method reads review and business file and store them data structure
      */
     public static List<Object> readFile(List<String> filePaths, String type) {
         InvertedIndex invertedIndex = new InvertedIndex(); //<term -> <id -> freq>>
@@ -76,56 +69,6 @@ public class ProcessData {
         }
         return output;
     }
-
-
-//    /**
-//     * parse the user inputs
-//     * @param args list of argument strings
-//     * @return list of file paths
-//     */
-//    public static List<String> validateFileArgs(String[] args){
-//        String reviewFile = null;
-//        String qnaFile = null;
-//        List<String> paths = new ArrayList<>();
-//        for(int i = 0; i < args.length; i++){
-//            if(args[i].equals("-reviews")){
-//                reviewFile = args[i+1];
-//            }
-//            else if(args[i].equals("-qa")){
-//                qnaFile = args[i+1];
-//            }
-//        }
-//
-//        System.out.println("review file: " + reviewFile);
-//        System.out.println("qna file: " + qnaFile);
-//
-//        if(reviewFile == null || qnaFile == null){
-//            System.out.println("Empty review file path or qna path");
-//            return null;
-//        }
-//        paths.add(reviewFile);
-//        paths.add(qnaFile);
-//        return paths;
-//    }
-
-
-//    /**
-//     * process User interface operations
-//     * @param paths list of file paths
-//     */
-//    public static void run(List<String> paths){
-//        if (paths != null && paths.size() == 2) {
-//            YelpSearch.UI ui = new YelpSearch.UI(paths);
-//            ui.processFiles();
-//            ui.userInput();
-//        }
-//    }
-
-
-//    public static void main(String[] args) {
-//        List<String> paths = validateFileArgs(args);
-//        run(paths);
-//    }
 
 
 }

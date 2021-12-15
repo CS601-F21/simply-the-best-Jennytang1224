@@ -3,6 +3,10 @@ package YelpSearch;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Class to store business info
+ * @return size
+ */
 public class BusinessIdMap {
     private final Map<String, Object> businessIdMap =  new HashMap<>(); //(businessID -> business obj)
 

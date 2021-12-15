@@ -7,7 +7,7 @@ import java.util.List;
 
 
 /**
- * YelpSearch.UI class is a data structure to prompt for user inout and manage all user operations.
+ * Class to run the program
  */
 public class UI {
     private final List<String> paths;
@@ -16,17 +16,13 @@ public class UI {
     private BusinessIdMap idMapBiz = new BusinessIdMap();
 
 
-    /**
-     * constructor for YelpSearch.UI class
-     * @param paths a list of filepath strings
-     */
     public UI(List<String> paths){
         this.paths = paths;
     }
 
 
     /**
-     * read both review and qa files
+     * read both review and business files
      */
     public void processFiles(){
         String log4jConfPath = "src/main/resource/log4j.properties";

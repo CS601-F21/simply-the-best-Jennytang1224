@@ -4,6 +4,9 @@ import org.apache.log4j.PropertyConfigurator;
 import java.io.IOException;
 import java.util.*;
 
+/**
+ * For testing purpose
+ */
 public class Run {
     public static void main(String[] args) throws IOException {
         String log4jConfPath = "src/main/resource/log4j.properties";

@@ -98,10 +98,7 @@ public class Search {
 
         businessWithPosCnt = MakeBusinessWithPosRWsMap(term);
         if (businessWithPosCnt != null) {
-            //System.out.println(" *** Top " + k + " restaurant(s) with best " + term + " : ***");
-           // sb.append("<br><h1>Top ").append(k).append(" restaurant(s) with best '").append(term).append("': </h1></br>");
             sb.append(HTTPServerConstants.RESULT_MSG_PART1).append(k).append(HTTPServerConstants.RESULT_MSG_PART2).append(term).append(HTTPServerConstants.RESULT_MSG_PART3);
-
             Map<String, Integer> sorted = sortHashMap(businessWithPosCnt);
             for (Map.Entry<String, Integer> entry : sorted.entrySet()) {
                 if (counter >= k) {

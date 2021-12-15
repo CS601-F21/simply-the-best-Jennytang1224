@@ -71,7 +71,7 @@ public class ReviewSearchHandler implements Handler{
         System.out.println("body: " + body);
         String term = body.substring(6); // query=xxx
         // read files
-        String result = getSearchResult(term, 3);
+        String result = getSearchResult(term);
         System.out.println(result);
         response.setResult(result);
         response.setHTTPStatusCode("200");
@@ -84,7 +84,7 @@ public class ReviewSearchHandler implements Handler{
      * @param term
      * @return result
      */
-    public String getSearchResult(String term, int k){
+    public String getSearchResult(String term){
         Search search = new Search(ui.getInvertedIndexRW(), ui.getIdMapRW(), ui.getIdMapBiz());
         return search.displayTopKBusiness(term, 3);
     }

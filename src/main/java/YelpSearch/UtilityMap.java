@@ -9,8 +9,6 @@ public class UtilityMap {
 
     /**
      * add items to invertedindex
-     * @param invertedIndex an invertedIndex map
-     * @param obj review/qa object
      */
     public static void addToInvertedIndex(InvertedIndex invertedIndex, Object obj){
         invertedIndex.add(obj);
@@ -19,14 +17,15 @@ public class UtilityMap {
 
     /**
      * add items to idMap
-     * @param idMap an idMap
-     * @param obj review/qa object
      */
     public static void addToIdMap(IdMap idMap, int docID, Object obj){
         idMap.put(docID, obj);
     }
 
 
+    /**
+     * add business to businessidMap
+     */
     public static void addToBusinessIdMap(BusinessIdMap businessIdMap, String bizId, Object obj){
         businessIdMap.put(bizId, obj);
     }

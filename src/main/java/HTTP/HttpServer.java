@@ -103,7 +103,7 @@ public class HttpServer {
                 Socket socket = serve.accept();
                 LOGGER.info("Got a new connection from " + socket.getInetAddress());
 
-//                this.threadPool.execute(() -> {
+                this.threadPool.execute(() -> {
                     try (
                             BufferedReader instream = new BufferedReader(new InputStreamReader(socket.getInputStream()));
                             PrintWriter writer = new PrintWriter(socket.getOutputStream())
@@ -140,7 +140,7 @@ public class HttpServer {
                         ioe.printStackTrace();
                         shutdownThreadPool();
                     }
-//                });
+                });
             }
 
         } catch(IOException ioe) {

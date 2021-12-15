@@ -17,9 +17,7 @@ public class BusinessInfo {
     private String categories;
 
     /**
-     * constructor for Review class
-     * @param docID document ID
-
+     * constructor for business class
      */
     public BusinessInfo(int docID, String business_id, String name, String address, String city, String state, String postal_code){
         this.docID = docID;
@@ -32,22 +30,24 @@ public class BusinessInfo {
     }
 
     /**
-     * Returns ASIN of the review
-     * @return ASIN
+     * Returns business id
      */
     public String getBusiness_id() {
         return business_id;
     }
 
 
+    /**
+     * Returns business category
+     */
     public String getBusinessCategories(){
         return categories;
     }
 
 
     /**
-     * display the info of the review
-     * @return review string
+     * display the info of the business
+     * @return  string
      */
     public String toString(){
         return "<h1>" + name + "</h1>"

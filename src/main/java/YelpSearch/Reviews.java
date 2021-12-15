@@ -65,12 +65,18 @@ public class Reviews {
         return text;
     }
 
-
+    /**
+     * Returns business id
+     * @return review text
+     */
     public String getBusiness_id(){
         return business_id;
     }
 
-
+    /**
+     * Returns stars of review
+     * @return review text
+     */
     public float getStars(){
         return stars;
     }

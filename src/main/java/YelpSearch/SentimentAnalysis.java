@@ -14,7 +14,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Properties;
 
-
+/**
+ * Class to construct and run sentiment analysis
+ */
 public class SentimentAnalysis {
     static StanfordCoreNLP pipeline;
     static List<String> stopwords;
@@ -25,20 +27,26 @@ public class SentimentAnalysis {
         pipeline = new StanfordCoreNLP(properties);
     }
 
-
-    //load stopwords
+    /**
+     * load stopwords
+     */
     public static void loadStopWords() throws IOException {
         stopwords = Files.readAllLines(Paths.get("data/stopwords.txt"));
     }
 
-    //remove stopwords
+
+    /**
+     * remove stopwords
+     */
     public static List<String> removeStopWords(String[] strArr){
         List<String> tokens = new LinkedList<String>(Arrays.asList(strArr));
         tokens.removeAll(stopwords);
         return tokens;
     }
 
-    //remove stop words
+    /**
+     * analyze sentiment
+     */
     public static String analyze(String review) {
         String type = "None";
         if (review != null && review.length() > 0) {
